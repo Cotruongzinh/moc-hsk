@@ -1,13 +1,35 @@
-﻿import { Link, Route, Routes } from 'react-router'
+﻿import { useQuery } from '@tanstack/react-query'
+import { Link, Route, Routes } from 'react-router'
 
 import { Button, buttonVariants } from '@/components/ui/button'
 
+type BaiHocDemo = {
+  capDo: string
+  tenBai: string
+  soTuMoi: number
+}
+
+async function layBaiHocDemo(): Promise<BaiHocDemo> {
+  await new Promise((resolve) => setTimeout(resolve, 800))
+
+  return {
+    capDo: 'HSK cấp 1',
+    tenBai: 'Bài 1: Chào hỏi',
+    soTuMoi: 10,
+  }
+}
+
 function TrangChu() {
+  const baiHocQuery = useQuery({
+    queryKey: ['demo', 'bai-hoc', 1],
+    queryFn: layBaiHocDemo,
+  })
+
   return (
     <main className="min-h-screen bg-[#F6F4EE] px-6 py-16 text-[#243B34]">
       <div className="mx-auto max-w-3xl">
         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-[#20634F]">
-          Kiểm tra shadcn/ui
+          Kiểm tra TanStack Query
         </p>
 
         <h1 className="text-5xl font-bold tracking-tight">
@@ -15,32 +37,62 @@ function TrangChu() {
         </h1>
 
         <p className="mt-5 max-w-xl text-lg leading-8 text-[#52635D]">
-          React Router, Tailwind CSS và shadcn/ui đang cùng hoạt động
-          trong dự án học tiếng Trung.
+          React Router, Tailwind CSS, shadcn/ui và TanStack Query đang
+          cùng hoạt động trong dự án.
         </p>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            to="/kiem-tra-router"
-            className={buttonVariants({ size: 'lg' })}
-          >
-            Sang trang kiểm tra Router
-          </Link>
-
-          <Button
-            type="button"
-            variant="outline"
-            size="lg"
-          >
-            shadcn/ui hoạt động
-          </Button>
-        </div>
-
-        <section className="mt-12 rounded-2xl border border-[#D8DDD8] bg-[#FFFDF8] p-6">
-          <p className="text-sm text-[#66736E]">
-            Component Button hiện tại được sinh trực tiếp bởi shadcn/ui
-            với preset Maia và Base UI.
+        <section className="mt-10 rounded-2xl border border-[#D8DDD8] bg-[#FFFDF8] p-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#20634F]">
+            Dữ liệu bài học
           </p>
+
+          {baiHocQuery.isPending && (
+            <p className="mt-4 text-[#66736E]">
+              Đang tải dữ liệu bài học...
+            </p>
+          )}
+
+          {baiHocQuery.isError && (
+            <p className="mt-4 text-red-700">
+              Không thể tải dữ liệu bài học.
+            </p>
+          )}
+
+          {baiHocQuery.data && (
+            <div className="mt-4">
+              <p className="text-sm text-[#66736E]">
+                {baiHocQuery.data.capDo}
+              </p>
+
+              <h2 className="mt-1 text-2xl font-semibold">
+                {baiHocQuery.data.tenBai}
+              </h2>
+
+              <p className="mt-2 text-[#52635D]">
+                {baiHocQuery.data.soTuMoi} từ mới trong bài demo.
+              </p>
+            </div>
+          )}
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => baiHocQuery.refetch()}
+              disabled={baiHocQuery.isFetching}
+            >
+              {baiHocQuery.isFetching
+                ? 'Đang tải...'
+                : 'Tải lại dữ liệu'}
+            </Button>
+
+            <Link
+              to="/kiem-tra-router"
+              className={buttonVariants()}
+            >
+              Kiểm tra Router
+            </Link>
+          </div>
         </section>
       </div>
     </main>
@@ -60,7 +112,7 @@ function KiemTraRouter() {
         </h1>
 
         <p className="mt-3 text-[#66736E]">
-          Routing, Tailwind CSS và shadcn/ui đều đã được tích hợp.
+          Routing và toàn bộ stack giao diện nền vẫn hoạt động.
         </p>
 
         <Link
