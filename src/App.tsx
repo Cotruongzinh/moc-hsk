@@ -1,6 +1,7 @@
 ﻿import { useQuery } from '@tanstack/react-query'
 import { Link, Route, Routes } from 'react-router'
 
+import { KiemTraZod } from '@/components/demo/kiem-tra-zod'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   type AudioSpeed,
@@ -201,6 +202,8 @@ function TrangChu() {
         </section>
 
         <CaiDatHocThu />
+
+        <KiemTraZod />
       </div>
     </main>
   )
@@ -250,3 +253,4 @@ function App() {
 }
 
 export default App
+
