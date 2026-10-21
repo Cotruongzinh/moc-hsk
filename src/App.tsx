@@ -2,6 +2,10 @@
 import { Link, Route, Routes } from 'react-router'
 
 import { Button, buttonVariants } from '@/components/ui/button'
+import {
+  type AudioSpeed,
+  useLearningPreferencesStore,
+} from '@/stores/learning-preferences-store'
 
 type BaiHocDemo = {
   capDo: string
@@ -19,6 +23,107 @@ async function layBaiHocDemo(): Promise<BaiHocDemo> {
   }
 }
 
+const audioSpeeds = [0.75, 1, 1.25] as const
+
+function CaiDatHocThu() {
+  const showPronunciation = useLearningPreferencesStore(
+    (state) => state.showPronunciation,
+  )
+
+  const autoPlayAudio = useLearningPreferencesStore(
+    (state) => state.autoPlayAudio,
+  )
+
+  const audioSpeed = useLearningPreferencesStore(
+    (state) => state.audioSpeed,
+  )
+
+  const togglePronunciation = useLearningPreferencesStore(
+    (state) => state.togglePronunciation,
+  )
+
+  const toggleAutoPlay = useLearningPreferencesStore(
+    (state) => state.toggleAutoPlay,
+  )
+
+  const setAudioSpeed = useLearningPreferencesStore(
+    (state) => state.setAudioSpeed,
+  )
+
+  return (
+    <section className="mt-8 rounded-2xl border border-[#D8DDD8] bg-[#FFFDF8] p-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#20634F]">
+        Kiểm tra Zustand
+      </p>
+
+      <div className="mt-5 rounded-2xl bg-[#F6F4EE] p-6 text-center">
+        <p className="text-5xl font-semibold">
+          你好
+        </p>
+
+        {showPronunciation && (
+          <p className="mt-3 text-[#20634F]">
+            nǐ hǎo
+          </p>
+        )}
+
+        <p className="mt-2 text-[#52635D]">
+          Xin chào
+        </p>
+      </div>
+
+      <div className="mt-6 grid gap-5">
+        <div>
+          <p className="mb-2 text-sm font-medium">
+            Phiên âm
+          </p>
+
+          <Button
+            type="button"
+            variant={showPronunciation ? 'default' : 'outline'}
+            onClick={togglePronunciation}
+          >
+            {showPronunciation ? 'Đang hiện' : 'Đang ẩn'}
+          </Button>
+        </div>
+
+        <div>
+          <p className="mb-2 text-sm font-medium">
+            Tự động phát âm
+          </p>
+
+          <Button
+            type="button"
+            variant={autoPlayAudio ? 'default' : 'outline'}
+            onClick={toggleAutoPlay}
+          >
+            {autoPlayAudio ? 'Đang bật' : 'Đang tắt'}
+          </Button>
+        </div>
+
+        <div>
+          <p className="mb-2 text-sm font-medium">
+            Tốc độ đọc
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {audioSpeeds.map((speed: AudioSpeed) => (
+              <Button
+                key={speed}
+                type="button"
+                variant={audioSpeed === speed ? 'default' : 'outline'}
+                onClick={() => setAudioSpeed(speed)}
+              >
+                {speed}x
+              </Button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function TrangChu() {
   const baiHocQuery = useQuery({
     queryKey: ['demo', 'bai-hoc', 1],
@@ -29,7 +134,7 @@ function TrangChu() {
     <main className="min-h-screen bg-[#F6F4EE] px-6 py-16 text-[#243B34]">
       <div className="mx-auto max-w-3xl">
         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-[#20634F]">
-          Kiểm tra TanStack Query
+          Kiểm tra Zustand
         </p>
 
         <h1 className="text-5xl font-bold tracking-tight">
@@ -37,13 +142,13 @@ function TrangChu() {
         </h1>
 
         <p className="mt-5 max-w-xl text-lg leading-8 text-[#52635D]">
-          React Router, Tailwind CSS, shadcn/ui và TanStack Query đang
-          cùng hoạt động trong dự án.
+          TanStack Query quản lý dữ liệu từ máy chủ, còn Zustand
+          quản lý trạng thái giao diện trên máy người học.
         </p>
 
         <section className="mt-10 rounded-2xl border border-[#D8DDD8] bg-[#FFFDF8] p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#20634F]">
-            Dữ liệu bài học
+            Dữ liệu bài học — TanStack Query
           </p>
 
           {baiHocQuery.isPending && (
@@ -94,6 +199,8 @@ function TrangChu() {
             </Link>
           </div>
         </section>
+
+        <CaiDatHocThu />
       </div>
     </main>
   )
@@ -112,7 +219,7 @@ function KiemTraRouter() {
         </h1>
 
         <p className="mt-3 text-[#66736E]">
-          Routing và toàn bộ stack giao diện nền vẫn hoạt động.
+          Toàn bộ stack nền vẫn hoạt động bình thường.
         </p>
 
         <Link
