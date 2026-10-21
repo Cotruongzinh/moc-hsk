@@ -1,7 +1,12 @@
-﻿import { useQuery } from '@tanstack/react-query'
+﻿import { lazy, Suspense } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Link, Route, Routes } from 'react-router'
 
 import { KiemTraZod } from '@/components/demo/kiem-tra-zod'
+
+const KiemTraRecharts = lazy(() =>
+  import('@/components/demo/kiem-tra-recharts'),
+)
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   type AudioSpeed,
@@ -204,6 +209,18 @@ function TrangChu() {
         <CaiDatHocThu />
 
         <KiemTraZod />
+
+        <Suspense
+          fallback={
+            <section className="mt-8 rounded-2xl border border-[#D8DDD8] bg-[#FFFDF8] p-6">
+              <p className="text-[#52635D]">
+                Đang tải biểu đồ tiến độ...
+              </p>
+            </section>
+          }
+        >
+          <KiemTraRecharts />
+        </Suspense>
       </div>
     </main>
   )
@@ -253,4 +270,6 @@ function App() {
 }
 
 export default App
+
+
 
