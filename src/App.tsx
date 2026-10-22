@@ -2,6 +2,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, Route, Routes } from 'react-router'
 
+import { KiemTraSupabase } from '@/components/demo/kiem-tra-supabase'
 import { KiemTraZod } from '@/components/demo/kiem-tra-zod'
 
 const KiemTraRecharts = lazy(() =>
@@ -210,6 +211,8 @@ function TrangChu() {
 
         <KiemTraZod />
 
+        <KiemTraSupabase />
+
         <Suspense
           fallback={
             <section className="mt-8 rounded-2xl border border-[#D8DDD8] bg-[#FFFDF8] p-6">
@@ -270,6 +273,7 @@ function App() {
 }
 
 export default App
+
 
 
 
